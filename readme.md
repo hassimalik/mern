@@ -28,9 +28,13 @@
 9. **Creating a route folder**: Create index.js inside it. Import, export and use the express router feature.
 - Browser -> Express App -> Router -> Route -> Response
 
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
 10. **Create a Controller Folder** Controllers think what to do with the request. Which actions would be performed.
 
 11. **Create functions in controllers** : as `createTodo` and `getTodo`
 >>>>>>> Stashed changes
+=======
+10. 
+>>>>>>> 6b65ce28e06d3209f59a14c3d7b669e34a5998c2
