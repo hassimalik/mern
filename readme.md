@@ -30,10 +30,4 @@
 
 10. **Creating a controller**: Controllers are functions or logic that run on request to give response. or to move it next.
 
-
-
 11. **Create functions in controllers** : as `createTodo` and `getTodo`
->>>>>>> Stashed changes
-=======
-10. 
->>>>>>> 6b65ce28e06d3209f59a14c3d7b669e34a5998c2
