@@ -29,19 +29,32 @@ const createTodo = async (req, res) =>{
 
 
 const updateTodo = async (req, res) => {
-    try{
+    try {
         const updatedTodo = await Todo.findByIdAndUpdate(
             req.params.id,
             req.body,
-            { new: true}
+            {
+                new: true,
+                runValidators: true,
+            }
         );
-        res.status(200).json(updateTodo)
-    } catch(error){
+
+        if (!updatedTodo) {
+            return res.status(404).json({
+                success: false,
+                message: "Todo not found",
+            });
+        }
+
+        res.status(200).json(updatedTodo);
+
+    } catch (error) {
         res.status(500).json({
+            success: false,
             message: error.message,
         });
     }
-}
+};
 
 
 const deleteTodo = async (req, res) => {
