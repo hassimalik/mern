@@ -7,6 +7,3 @@ const todoRoutes = require('./todo.routes')
 router.use("/todos", todoRoutes)
 
 module.exports = router;
-
-
-

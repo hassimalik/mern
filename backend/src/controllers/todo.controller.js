@@ -2,7 +2,9 @@ const Todo = require("../models/todo.model");
 
 const getTodos = async (req, res) => {
     try{
-        const todos = await Todo.find();
+        const todos = await Todo.find()
+        .sort({createdAt: -1})
+        .lean();
         res.status(200).json({
             success: true,
             count: todos.length,
@@ -19,10 +21,14 @@ const getTodos = async (req, res) => {
 const createTodo = async (req, res) =>{
     try{
         const todo = await Todo.create(req.body);
-        res.status(201).json(todo)
+        res.status(201).json({
+            success: true,
+            data: todo,
+        })
     } catch(err){
         res.status(500).json({
-            message: error.message,
+            success: false,
+            message: err.message,
         })
     }
 }
@@ -30,9 +36,14 @@ const createTodo = async (req, res) =>{
 
 const updateTodo = async (req, res) => {
     try {
+        const { title, completed } = req.body;
+
         const updatedTodo = await Todo.findByIdAndUpdate(
             req.params.id,
-            req.body,
+            {
+                title,
+                completed,
+            },
             {
                 new: true,
                 runValidators: true,
@@ -46,7 +57,10 @@ const updateTodo = async (req, res) => {
             });
         }
 
-        res.status(200).json(updatedTodo);
+        res.status(200).json({
+            success: true,
+            data: updatedTodo,
+        });
 
     } catch (error) {
         res.status(500).json({

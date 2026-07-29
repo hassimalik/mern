@@ -6,13 +6,15 @@ import React from 'react';
 interface TodoFormProps {
     value : string;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    onChange: (even: React.FormEvent<HTMLFormElement>) => void;
+    onSubmit: (even: React.FormEvent<HTMLFormElement>) => void;
+    isSubmitting: boolean;
 }
 
 export default function TodoForm({
     value,
     onChange,
     onSubmit,
+    isSubmitting,
 }:TodoFormProps) {
     return (
         <form
@@ -26,7 +28,7 @@ export default function TodoForm({
                 onChange={onChange}
                 className="flex-1"
             />
-            <Button className="bg-orange-500 text-gray-800 p-4" type="submit">
+            <Button disabled={isSubmitting} className="bg-orange-500 text-gray-800 p-4" type="submit">
                 Add Todo
             </Button>
         </form>

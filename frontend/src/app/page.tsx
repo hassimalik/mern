@@ -17,12 +17,15 @@ import {
 export default function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [title, setTitle] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   useEffect(() => {
     fetchTodos();
   }, []);
 
   async function fetchTodos() {
+    console.log("fetchTodos called");
     try {
       const data = await getTodos();
       setTodos(data);
@@ -39,18 +42,23 @@ export default function Home() {
     if (!title.trim()) return;
 
     try {
+      setIsSubmitting(true);
       await createTodo(title);
       setTitle("");
-      fetchTodos();
+      await fetchTodos();
+      setIsSubmitting(false)
     } catch (error) {
       console.error(error);
+    }
+    finally {
+      setIsSubmitting(false);
     }
   }
 
   async function handleDeleteTodo(id: string) {
     try {
       await deleteTodo(id);
-      fetchTodos();
+      await fetchTodos();
     } catch (error) {
       console.error(error);
     }
@@ -66,26 +74,26 @@ export default function Home() {
         completed: !todo.completed,
       });
 
-      fetchTodos();
+      await fetchTodos();
     } catch (error) {
       console.error(error);
     }
   }
 
   async function handleUpdateTodo(
-  id: string,
-  title: string
-) {
-  try {
-    await updateTodo(id, {
-      title,
-    });
+    id: string,
+    title: string
+  ) {
+    try {
+      await updateTodo(id, {
+        title,
+      });
 
-    fetchTodos();
-  } catch (error) {
-    console.error(error);
+      await fetchTodos();
+    } catch (error) {
+      console.error(error);
+    }
   }
-}
 
   return (
     <main className="flex min-h-screen flex-col bg-gray-100">
@@ -98,6 +106,7 @@ export default function Home() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           onSubmit={handleCreateTodo}
+          isSubmitting={isSubmitting}
         />
 
         <div className="mt-6">
