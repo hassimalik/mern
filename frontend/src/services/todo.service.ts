@@ -1,18 +1,34 @@
+import type { Todo } from "@/types/todo";
+
 const API_URL = "http://localhost:5000/api/todos";
-export async function getTodos() {
-    const response = await fetch(API_URL);
+
+interface ApiResponse<T> {
+    success: boolean;
+    message?: string;
+    data: T;
+}
+
+async function request<T>(
+    url: string,
+    options?: RequestInit
+): Promise<T> {
+    const response = await fetch(url, options);
+
+    const result: ApiResponse<T> = await response.json();
 
     if (!response.ok) {
-        throw new Error("Failed to fetch todos");
+        throw new Error(result.message || "Something went wrong");
     }
-
-    const result = await response.json();
 
     return result.data;
 }
 
-export async function createTodo(title: string) {
-    const response = await fetch(API_URL, {
+export function getTodos(): Promise<Todo[]> {
+    return request<Todo[]>(API_URL);
+}
+
+export function createTodo(title: string): Promise<Todo> {
+    return request<Todo>(API_URL, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -22,32 +38,23 @@ export async function createTodo(title: string) {
             completed: false,
         }),
     });
-
-    if (!response.ok) throw new Error("Failed to create todo");
-
-    return response.json();
 }
 
-export async function updateTodo(id: string, data: object) {
-    const response = await fetch(`${API_URL}/${id}`, {
-        method: "PUT",
+export function updateTodo(
+    id: string,
+    data: Partial<Todo>
+): Promise<Todo> {
+    return request<Todo>(`${API_URL}/${id}`, {
+        method: "PATCH",
         headers: {
             "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
     });
-
-    if (!response.ok) throw new Error("Failed to update todo");
-
-    return response.json();
 }
 
-export async function deleteTodo(id: string) {
-    const response = await fetch(`${API_URL}/${id}`, {
+export function deleteTodo(id: string): Promise<Todo> {
+    return request<Todo>(`${API_URL}/${id}`, {
         method: "DELETE",
     });
-
-    if (!response.ok) throw new Error("Failed to delete todo");
-
-    return response.json();
 }

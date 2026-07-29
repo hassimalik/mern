@@ -8,6 +8,7 @@ interface TodoItemProps {
     onDelete: (id: string) => void;
     onToggle: (id: string) => void;
     onUpdate: (id: string, title: string) => void;
+    deletingIds: string[];
 }
 
 export default function TodoItem({
@@ -15,6 +16,7 @@ export default function TodoItem({
     onDelete,
     onToggle,
     onUpdate,
+    deletingIds
 }: TodoItemProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState(todo.title);
@@ -68,8 +70,8 @@ export default function TodoItem({
                     <span
                         onDoubleClick={() => setIsEditing(true)}
                         className={`flex-1 cursor-text select-none ${todo.completed
-                                ? "text-gray-400 line-through"
-                                : "text-gray-800"
+                            ? "text-gray-400 line-through"
+                            : "text-gray-800"
                             }`}
                     >
                         {todo.title}
@@ -78,10 +80,14 @@ export default function TodoItem({
             </div>
 
             <Button
+                disabled={deletingIds.includes(todo._id)}
                 onClick={() => onDelete(todo._id)}
-                className="bg-red-500 text-white hover:bg-red-600"
             >
-                Delete
+                {
+                    deletingIds.includes(todo._id)
+                        ? "Deleting..."
+                        : "Delete"
+                }
             </Button>
         </li>
     );

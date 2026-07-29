@@ -6,6 +6,7 @@ interface TodoListProps {
     onDelete: (id: string) => void;
     onToggle: (id: string) => void;
     onUpdate: (id: string, title: string) => void;
+    deletingIds: string[];
 }
 
 export default function TodoList({
@@ -13,6 +14,7 @@ export default function TodoList({
     onDelete,
     onToggle,
     onUpdate,
+    deletingIds
 }: TodoListProps) {
     if (todos.length === 0) {
         return (
@@ -31,6 +33,7 @@ export default function TodoList({
                     onDelete={onDelete}
                     onToggle={onToggle}
                     onUpdate={onUpdate}
+                    deletingIds={deletingIds}
                 />
             ))}
         </ul>
