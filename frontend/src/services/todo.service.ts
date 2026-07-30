@@ -1,7 +1,7 @@
 import type { Todo } from "@/types/todo";
 
-const API_URL = "http://localhost:5000/api/todos";
-
+const API_URL =
+  process.env.NEXT_PUBLIC_API_URL!;
 interface ApiResponse<T> {
     success: boolean;
     message?: string;
