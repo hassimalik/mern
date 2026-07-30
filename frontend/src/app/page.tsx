@@ -77,8 +77,9 @@ export default function Home() {
 
 
     if (alreadyExists) {
-
-      console.log("Todo already exists");
+      toast.warning("Todo already exists", {
+        description: "Choose a different title.",
+      });
 
       return;
     }
@@ -302,62 +303,62 @@ export default function Home() {
 
   return (
     <>
-    {isLoading && <Loader />}
-     <main className="flex min-h-screen flex-col bg-gray-100">
+      {isLoading && <Loader />}
+      <main className="flex min-h-screen flex-col bg-gray-100">
 
-      <div className="mx-auto w-full max-w-2xl flex-1 p-8">
-
-
-        <h1 className="mb-8 text-center font-roboto text-4xl font-bold">
-          My Tasks
-        </h1>
+        <div className="mx-auto w-full max-w-2xl flex-1 p-8">
 
 
-
-        <TodoForm
-          value={title}
-          onChange={(e) =>
-            setTitle(e.target.value)
-          }
-          onSubmit={handleCreateTodo}
-          isSubmitting={isSubmitting}
-        />
+          <h1 className="mb-8 text-center font-roboto text-4xl font-bold">
+            My Tasks
+          </h1>
 
 
 
-        <div className="mt-6">
-
-          <TodoList
-            todos={todos}
-            onDelete={handleDeleteTodo}
-            onToggle={handleToggleTodo}
-            onUpdate={handleUpdateTodo}
-            deletingIds={deletingIds}
+          <TodoForm
+            value={title}
+            onChange={(e) =>
+              setTitle(e.target.value)
+            }
+            onSubmit={handleCreateTodo}
+            isSubmitting={isSubmitting}
           />
+
+
+
+          <div className="mt-6">
+
+            <TodoList
+              todos={todos}
+              onDelete={handleDeleteTodo}
+              onToggle={handleToggleTodo}
+              onUpdate={handleUpdateTodo}
+              deletingIds={deletingIds}
+            />
+
+          </div>
+
 
         </div>
 
 
-      </div>
 
 
+        <footer className="border-t border-gray-200 bg-white py-5">
+
+          <p className="text-center text-sm text-gray-500">
+
+            <span className="text-red-700 font-bold">
+              Tip:
+            </span>{" "}
+            Double-click to edit it.
+
+          </p>
+
+        </footer>
 
 
-      <footer className="border-t border-gray-200 bg-white py-5">
-
-        <p className="text-center text-sm text-gray-500">
-
-          <span className="text-red-700 font-bold">
-            Tip:
-          </span>{" "}
-          Double-click to edit it.
-
-        </p>
-
-      </footer>
-
-
-    </main>
+      </main>
     </>
   );
 }

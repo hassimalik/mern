@@ -28,7 +28,7 @@ export default function TodoForm({
                 onChange={onChange}
                 className="flex-1"
             />
-            <Button disabled={isSubmitting} className="bg-orange-500 text-gray-800 p-4" type="submit">
+            <Button disabled={isSubmitting} className="bg-orange-500 transition-colors cursor-pointer hover:bg-amber-300 text-gray-800 p-4" type="submit">
                 Add Todo
             </Button>
         </form>
