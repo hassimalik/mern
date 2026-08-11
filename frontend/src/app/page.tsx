@@ -1,7 +1,8 @@
 "use client";
+
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
-import Loader from "@/components/common/loader/loader"
+import Loader from "@/components/common/loader/loader";
 import TodoForm from "@/components/todo/TodoForm/TodoForm";
 import TodoList from "@/components/todo/TodoList/TodoList";
 
@@ -14,7 +15,6 @@ import {
   deleteTodo,
 } from "@/services/todo.service";
 
-
 export default function Home() {
 
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -23,11 +23,9 @@ export default function Home() {
   const [deletingIds, setDeletingIds] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-
   useEffect(() => {
     loadTodos();
   }, []);
-
 
   async function loadTodos() {
 
@@ -35,17 +33,13 @@ export default function Home() {
 
       setIsLoading(true);
 
-
       const data = await getTodos();
 
-
       setTodos(data);
-
 
     } catch (error) {
 
       console.error(error);
-
 
     } finally {
 
@@ -55,26 +49,21 @@ export default function Home() {
 
   }
 
-
   async function handleCreateTodo(
-    event: React.FormEvent<HTMLFormElement>
+    event: React.FormEvent
   ) {
 
     event.preventDefault();
 
-
     const trimmedTitle = title.trim();
 
-
     if (!trimmedTitle) return;
-
 
     const alreadyExists = todos.some(
       (todo) =>
         todo.title.toLowerCase() ===
         trimmedTitle.toLowerCase()
     );
-
 
     if (alreadyExists) {
       toast.warning("Todo already exists", {
@@ -84,16 +73,15 @@ export default function Home() {
       return;
     }
 
-
-
     try {
 
       setIsSubmitting(true);
 
-
       const newTodo = await createTodo(trimmedTitle);
-      toast.success("Todo created successfully.")
 
+      console.log("NEW TODO:", newTodo);
+
+      toast.success("Todo created successfully.");
 
       // instant UI update
       setTodos((prev) => [
@@ -101,9 +89,7 @@ export default function Home() {
         ...prev,
       ]);
 
-
       setTitle("");
-
 
     } catch (error) {
 
@@ -114,56 +100,72 @@ export default function Home() {
       setIsSubmitting(false);
 
     }
+
   }
 
+  function handleReorderTodo(
+    fromIndex: number,
+    toIndex: number
+  ) {
 
+    setTodos((prev) => {
 
+      const newTodos = [...prev];
+
+      const [movedTodo] = newTodos.splice(
+        fromIndex,
+        1
+      );
+
+      newTodos.splice(
+        toIndex,
+        0,
+        movedTodo
+      );
+
+      return newTodos;
+
+    });
+
+  }
 
   async function handleDeleteTodo(id: string) {
 
-
     if (deletingIds.includes(id)) return;
 
-
     const previousTodos = todos;
-
 
     // remove instantly from UI
     setTodos((prev) =>
       prev.filter(
-        (todo) => todo._id !== id
+        (todo) => todo.id !== id
       )
     );
-
 
     setDeletingIds((prev) => [
       ...prev,
       id,
     ]);
 
-
-
     try {
 
       await deleteTodo(id);
-      toast.success("Todo deleted successfully");
 
+      toast.success(
+        "Todo deleted successfully"
+      );
 
     } catch (error) {
 
-
       // rollback if API fails
       setTodos(previousTodos);
-
 
       console.error(
         "Delete todo failed:",
         error
       );
 
-
     } finally {
-
 
       setDeletingIds((prev) =>
         prev.filter(
@@ -172,69 +174,57 @@ export default function Home() {
       );
 
     }
+
   }
-
-
-
 
   async function handleToggleTodo(id: string) {
 
-
     const todo = todos.find(
-      (todo) => todo._id === id
+      (todo) => todo.id === id
     );
 
-
     if (!todo) return;
-
-
 
     const updatedTodo = {
       ...todo,
       completed: !todo.completed,
     };
 
-
-
     // instant checkbox update
     setTodos((prev) =>
       prev.map((item) =>
-        item._id === id
+        item.id === id
           ? updatedTodo
           : item
       )
     );
 
-
-
     try {
-
 
       await updateTodo(id, {
         completed: updatedTodo.completed,
       });
+
       toast.success(
         updatedTodo.completed
           ? "Todo completed"
           : "Todo marked incomplete"
       );
 
-
-
     } catch (error) {
 
       toast.error(
         "Something went wrong"
       );
+
       // rollback
       setTodos((prev) =>
         prev.map((item) =>
-          item._id === id
+          item.id === id
             ? todo
             : item
         )
       );
-
 
       console.error(
         "Toggle todo failed:",
@@ -242,52 +232,42 @@ export default function Home() {
       );
 
     }
+
   }
-
-
-
-
 
   async function handleUpdateTodo(
     id: string,
     title: string
   ) {
 
-
     const previousTodos = todos;
-
-
 
     // instant text update
     setTodos((prev) =>
       prev.map((todo) =>
-        todo._id === id
+        todo.id === id
           ? {
-            ...todo,
-            title,
-          }
+              ...todo,
+              title,
+            }
           : todo
       )
     );
 
-
-
     try {
-
 
       await updateTodo(id, {
         title,
       });
-      toast.success("Todo updated");
 
-
+      toast.success(
+        "Todo updated"
+      );
 
     } catch (error) {
 
-
       // rollback
       setTodos(previousTodos);
-
 
       console.error(
         "Update todo failed:",
@@ -295,70 +275,55 @@ export default function Home() {
       );
 
     }
+
   }
-
-
-
-
 
   return (
     <>
       {isLoading && <Loader />}
-      <main className="flex min-h-screen flex-col bg-gray-100">
 
-        <div className="mx-auto w-full max-w-2xl flex-1 p-8">
+      <div className="mx-auto w-full max-w-2xl flex-1 p-8">
 
+        <h1 className="mb-8 text-center font-roboto text-4xl font-bold">
+          My Tasks
+        </h1>
 
-          <h1 className="mb-8 text-center font-roboto text-4xl font-bold">
-            My Tasks
-          </h1>
+        <TodoForm
+          value={title}
+          onChange={(e) =>
+            setTitle(e.target.value)
+          }
+          onSubmit={handleCreateTodo}
+          isSubmitting={isSubmitting}
+        />
 
+        <div className="mt-6">
 
-
-          <TodoForm
-            value={title}
-            onChange={(e) =>
-              setTitle(e.target.value)
-            }
-            onSubmit={handleCreateTodo}
-            isSubmitting={isSubmitting}
+          <TodoList
+            todos={todos}
+            onDelete={handleDeleteTodo}
+            onToggle={handleToggleTodo}
+            onUpdate={handleUpdateTodo}
+            deletingIds={deletingIds}
+            onReorder={handleReorderTodo}
           />
-
-
-
-          <div className="mt-6">
-
-            <TodoList
-              todos={todos}
-              onDelete={handleDeleteTodo}
-              onToggle={handleToggleTodo}
-              onUpdate={handleUpdateTodo}
-              deletingIds={deletingIds}
-            />
-
-          </div>
-
 
         </div>
 
+      </div>
 
+      <footer className="border-t border-gray-200 bg-white py-5">
 
+        <p className="text-center text-sm text-gray-500">
 
-        <footer className="border-t border-gray-200 bg-white py-5">
+          <span className="text-red-700 font-bold">
+            Tip:
+          </span>{" "}
+          Double-click to edit it.
 
-          <p className="text-center text-sm text-gray-500">
+        </p>
 
-            <span className="text-red-700 font-bold">
-              Tip:
-            </span>{" "}
-            Double-click to edit it.
-
-          </p>
-
-        </footer>
-
-
-      </main>
+      </footer>
     </>
   );
 }

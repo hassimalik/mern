@@ -1,12 +1,11 @@
-import Input from '@/components/common/input/Input';
-import Button from '../../common/button/Button';
-import React from 'react';
-
+import Input from "@/components/common/input/Input";
+import Button from "../../common/button/Button";
+import React from "react";
 
 interface TodoFormProps {
-    value : string;
+    value: string;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-    onSubmit: (even: React.FormEvent<HTMLFormElement>) => void;
+    onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
     isSubmitting: boolean;
 }
 
@@ -15,7 +14,7 @@ export default function TodoForm({
     onChange,
     onSubmit,
     isSubmitting,
-}:TodoFormProps) {
+}: TodoFormProps) {
     return (
         <form
             onSubmit={onSubmit}
@@ -28,10 +27,15 @@ export default function TodoForm({
                 onChange={onChange}
                 className="flex-1"
             />
-            <Button disabled={isSubmitting} className="bg-orange-500 transition-colors cursor-pointer hover:bg-amber-300 text-gray-800 p-4" type="submit">
+
+            <Button
+                disabled={isSubmitting}
+                className="bg-orange-500 transition-colors cursor-pointer hover:bg-amber-300 text-gray-800 p-4"
+                type="submit"
+            >
                 Add Todo
             </Button>
         </form>
-    )
+    );
 }
 

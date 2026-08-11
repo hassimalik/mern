@@ -16,7 +16,7 @@ export default function TodoItem({
     onDelete,
     onToggle,
     onUpdate,
-    deletingIds
+    deletingIds,
 }: TodoItemProps) {
     const [isEditing, setIsEditing] = useState(false);
     const [editedTitle, setEditedTitle] = useState(todo.title);
@@ -30,7 +30,13 @@ export default function TodoItem({
             return;
         }
 
-        onUpdate(todo._id, trimmedTitle);
+        // Nothing changed, just exit editing mode
+        if (trimmedTitle === todo.title) {
+            setIsEditing(false);
+            return;
+        }
+
+        onUpdate(todo.id, trimmedTitle);
         setIsEditing(false);
     }
 
@@ -53,7 +59,7 @@ export default function TodoItem({
                 <input
                     type="checkbox"
                     checked={todo.completed}
-                    onChange={() => onToggle(todo._id)}
+                    onChange={() => onToggle(todo.id)}
                     className="h-4 w-4 cursor-pointer accent-blue-600"
                 />
 
@@ -61,8 +67,11 @@ export default function TodoItem({
                     <input
                         type="text"
                         value={editedTitle}
-                        onChange={(e) => setEditedTitle(e.target.value)}
+                        onChange={(e) =>
+                            setEditedTitle(e.target.value)
+                        }
                         onKeyDown={handleKeyDown}
+                        onBlur={handleSave}
                         autoFocus
                         className="flex-1 rounded-md border border-blue-400 px-2 py-1 outline-none focus:ring-2 focus:ring-blue-300"
                     />
@@ -70,8 +79,8 @@ export default function TodoItem({
                     <span
                         onDoubleClick={() => setIsEditing(true)}
                         className={`flex-1 cursor-text select-none ${todo.completed
-                            ? "text-gray-400 line-through"
-                            : "text-gray-800"
+                                ? "text-gray-400 line-through"
+                                : "text-gray-800"
                             }`}
                     >
                         {todo.title}
@@ -80,14 +89,12 @@ export default function TodoItem({
             </div>
 
             <Button
-                disabled={deletingIds.includes(todo._id)}
-                onClick={() => onDelete(todo._id)}
+                disabled={deletingIds.includes(todo.id)}
+                onClick={() => onDelete(todo.id)}
             >
-                {
-                    deletingIds.includes(todo._id)
-                        ? "Deleting..."
-                        : "Delete"
-                }
+                {deletingIds.includes(todo.id)
+                    ? "Deleting..."
+                    : "🗑️"}
             </Button>
         </li>
     );
