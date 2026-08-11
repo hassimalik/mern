@@ -2,12 +2,14 @@ import Input from "@/components/common/input/Input";
 import Button from "../../common/button/Button";
 import React from "react";
 
+
 interface TodoFormProps {
     value: string;
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
     isSubmitting: boolean;
 }
+
 
 export default function TodoForm({
     value,
@@ -28,14 +30,20 @@ export default function TodoForm({
                 className="flex-1"
             />
 
+
             <Button
                 disabled={isSubmitting}
                 className="bg-orange-500 transition-colors cursor-pointer hover:bg-amber-300 text-gray-800 p-4"
                 type="submit"
             >
-                Add Todo
+                {isSubmitting ? (
+                    <span
+                        className="inline-block h-5 w-5 animate-spin rounded-full border-2 border-gray-800 border-t-transparent"
+                    />
+                ) : (
+                    "Add Todo"
+                )}
             </Button>
         </form>
     );
 }
-

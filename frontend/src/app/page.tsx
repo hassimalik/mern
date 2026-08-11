@@ -76,7 +76,6 @@ export default function Home() {
   async function handleCreateTodo(
     event: React.FormEvent
   ) {
-
     event.preventDefault();
 
     const trimmedTitle = title.trim();
@@ -98,16 +97,12 @@ export default function Home() {
     }
 
     try {
-
       setIsSubmitting(true);
 
       const newTodo = await createTodo(trimmedTitle);
 
       console.log("NEW TODO:", newTodo);
 
-      toast.success("Todo created successfully.");
-
-      // instant UI update
       setTodos((prev) => [
         newTodo,
         ...prev,
@@ -115,16 +110,18 @@ export default function Home() {
 
       setTitle("");
 
-    } catch (error) {
+      toast.success("Todo created successfully.");
 
+    } catch (error) {
       console.error("Create todo failed:", error);
 
+      toast.error("Failed to create todo", {
+        description: "Please check your connection and try again.",
+      });
+
     } finally {
-
       setIsSubmitting(false);
-
     }
-
   }
 
   function handleReorderTodo(
