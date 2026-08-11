@@ -27,6 +27,30 @@ export default function Home() {
     loadTodos();
   }, []);
 
+
+  useEffect(() => {
+    function handleOffline() {
+      toast.error("You are offline", {
+        description: "Please check your internet connection.",
+      });
+    }
+
+    function handleOnline() {
+      toast.success("You are back online", {
+        description: "Your internet connection has been restored.",
+      });
+    }
+
+    window.addEventListener("offline", handleOffline);
+    window.addEventListener("online", handleOnline);
+
+    return () => {
+      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener("online", handleOnline);
+    };
+  }, []);
+
+
   async function loadTodos() {
 
     try {
@@ -247,9 +271,9 @@ export default function Home() {
       prev.map((todo) =>
         todo.id === id
           ? {
-              ...todo,
-              title,
-            }
+            ...todo,
+            title,
+          }
           : todo
       )
     );
