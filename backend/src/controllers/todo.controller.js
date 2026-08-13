@@ -1,9 +1,12 @@
 const Todo = require("../models/todo.model");
 const sendResponse = require("../helpers/response.helper");
+
 const {
+    transform,
+    transformMany,
     transformTodo,
-    transformTodos,
-} = require("../helpers/transform.helper");
+} = require("../helpers/transform");
+
 
 // GET ALL TODOS
 const getTodos = async (req, res) => {
@@ -19,12 +22,14 @@ const getTodos = async (req, res) => {
             statusCode: 200,
             success: true,
             message: "Todos fetched successfully.",
-            data: transformTodos(todos),
+            data: transformMany(todos, transformTodo),
             meta: {
                 count: todos.length,
             },
         });
+
     } catch (error) {
+
         return sendResponse({
             res,
             statusCode: 500,
@@ -33,6 +38,7 @@ const getTodos = async (req, res) => {
         });
     }
 };
+
 
 // CREATE TODO
 const createTodo = async (req, res) => {
@@ -69,9 +75,11 @@ const createTodo = async (req, res) => {
             statusCode: 201,
             success: true,
             message: "Todo created successfully.",
-            data: transformTodo(todo),
+            data: transform(todo, transformTodo),
         });
+
     } catch (error) {
+
         return sendResponse({
             res,
             statusCode: 500,
@@ -80,6 +88,7 @@ const createTodo = async (req, res) => {
         });
     }
 };
+
 
 // UPDATE TODO
 const updateTodo = async (req, res) => {
@@ -119,9 +128,11 @@ const updateTodo = async (req, res) => {
             statusCode: 200,
             success: true,
             message: "Todo updated successfully.",
-            data: transformTodo(updatedTodo),
+            data: transform(updatedTodo, transformTodo),
         });
+
     } catch (error) {
+
         return sendResponse({
             res,
             statusCode: 500,
@@ -131,10 +142,13 @@ const updateTodo = async (req, res) => {
     }
 };
 
+
 // DELETE TODO
 const deleteTodo = async (req, res) => {
     try {
-        const deletedTodo = await Todo.findByIdAndDelete(req.params.id);
+        const deletedTodo = await Todo.findByIdAndDelete(
+            req.params.id
+        );
 
         if (!deletedTodo) {
             return sendResponse({
@@ -150,9 +164,11 @@ const deleteTodo = async (req, res) => {
             statusCode: 200,
             success: true,
             message: "Todo deleted successfully.",
-            data: transformTodo(deletedTodo),
+            data: transform(deletedTodo, transformTodo),
         });
+
     } catch (error) {
+
         return sendResponse({
             res,
             statusCode: 500,
@@ -161,6 +177,7 @@ const deleteTodo = async (req, res) => {
         });
     }
 };
+
 
 module.exports = {
     getTodos,
