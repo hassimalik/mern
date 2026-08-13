@@ -10,13 +10,11 @@ const logger = (req, res, next) => {
 
         console.log(
             `${req.method} ${req.originalUrl}
-Status: ${res.statusCode}
-Time: ${duration}ms`
+            Status: ${res.statusCode}
+            Time: ${duration}ms`
         );
 
     });
-
-
     next();
 };
 

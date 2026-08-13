@@ -33,7 +33,7 @@ export default function TodoForm({
 
             <Button
                 disabled={isSubmitting}
-                className="bg-orange-500 transition-colors cursor-pointer hover:bg-amber-300 text-gray-800 p-4"
+                className="bg-orange-500  transition-colors cursor-pointer hover:bg-amber-300 text-gray-800 p-4"
                 type="submit"
             >
                 {isSubmitting ? (
