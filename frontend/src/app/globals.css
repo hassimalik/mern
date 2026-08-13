@@ -5,6 +5,28 @@
   font-weight: 600;
   font-size: 50px;
 }
+
+
+.font-script {
+  font-family: "Dancing-Script", cursive;
+  font-weight:600;
+  font-size: 50px
+}
+
+
+@keyframes marquee {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(-100%);
+    }
+}
+
+.animate-marquee {
+    animation: marquee 12s linear infinite;
+}
 /* :root {
   --background: #ffffff;
   --foreground: #171717;
