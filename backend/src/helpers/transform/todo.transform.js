@@ -13,11 +13,7 @@ const transformTodo = (todo) => {
     };
 };
 
-const transformTodos = (todos) => {
-    return todos.map(transformTodo);
-};
 
 module.exports = {
     transformTodo,
-    transformTodos,
 };
